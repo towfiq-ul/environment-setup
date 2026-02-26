@@ -34,6 +34,7 @@ alias gitchk="git checkout"
 # language aliases
 
 alias python="python3"
+alias gor="go run"
 
 #machine aliases
 alias updateMachine="sudo apt update -y && sudo apt upgrade -y && sudo apt full-upgrade -y"
@@ -60,7 +61,7 @@ gitCheckoutOrigin () {
 	git checkout origin/"$branch_name"
 }
 
-git_drop_commit() {
+git_drop_commit () {
     if [ -z "$1" ]; then
         echo "Usage: git-drop-commit <commit-hash-or-prefix>"
         return 1
