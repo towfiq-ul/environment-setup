@@ -96,6 +96,37 @@ gitReverseCommitX () {
    git restore --staged .
 }
 
+
+git-change-author() {
+    if [ "$#" -ne 3 ]; then
+        echo "Usage: git-change-author <commit-hash> \"New Name\" new-email@example.com"
+        return 1
+    fi
+
+    # Automatically expand a short hash into the full 40-character hash
+    local target_commit=$(git rev-parse "$1" 2>/dev/null)
+    
+    if [ -z "$target_commit" ]; then
+        echo "Error: Could not find a commit matching '$1'"
+        return 1
+    fi
+
+    local new_name="$2"
+    local new_email="$3"
+
+    # Silence the deprecation warning
+    export FILTER_BRANCH_SQUELCH_WARNING=1
+
+    git filter-branch --force --env-filter '
+        if [ "$GIT_COMMIT" = "'"$target_commit"'" ]; then
+            export GIT_AUTHOR_NAME="'"$new_name"'"
+            export GIT_AUTHOR_EMAIL="'"$new_email"'"
+            export GIT_COMMITTER_NAME="'"$new_name"'"
+            export GIT_COMMITTER_EMAIL="'"$new_email"'"
+        fi
+    ' -- --all
+}
+
 killPort () {
 	PID=$(sudo lsof -t -i:$1)
         sudo kill -9 ${PID}
