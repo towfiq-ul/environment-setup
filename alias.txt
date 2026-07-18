@@ -127,12 +127,12 @@ git-change-author() {
     ' -- --all
 }
 
-killPort () {
+killport () {
 	PID=$(sudo lsof -t -i:$1)
         sudo kill -9 ${PID}
 }
 
-checkPort (){
+checkport (){
 	sudo lsof -i :$1
 }
 
